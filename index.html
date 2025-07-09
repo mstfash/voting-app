@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pop Culture Voting App</title>
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+// --- Seed Data ---
+const seedData = {
+  categories: {
+    best_movie_plot_twist: {
+      title: "Best Movie Plot Twist",
+      description: "Rate the most shocking reveals",
+      items: [
+        { id: "twist_001", title: "The Sixth Sense - 'I see dead people'", image: "https://m.media-amazon.com/images/M/MV5BMWM4NTFhYjctNzUyNi00NGMwLTk3NTYtMDIyNTZmMzRlYmQyXkEyXkFqcGdeQXVyMTAwMzUyOTc@._V1_FMjpg_UX1000_.jpg" },
+        { id: "twist_002", title: "Fight Club - Tyler Durden reveal", image: "https://m.media-amazon.com/images/M/MV5BNDIzNDU0YzEtYzE5Ni00ZjlkLTk5ZjgtNjM3NWE4YzA3Nzk3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_FMjpg_UX1000_.jpg" },
+        { id: "twist_003", title: "The Usual Suspects - Keyser Söze", image: "https://m.media-amazon.com/images/M/MV5BYTViNzMxZjEtZGEwNy00MDNiLWIzNGQtZDY2MjQ1OWViZjFmXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_FMjpg_UX1000_.jpg" },
+        { id: "twist_004", title: "Star Wars: Empire Strikes Back - 'I am your father'", image: "https://m.media-amazon.com/images/M/MV5BYmU1NDRjNDgtMzhiMi00NjZmLTg5NGItZDNiZjU5NTU4OTE0XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_FMjpg_UX1000_.jpg" },
+        { id: "twist_005", title: "Shutter Island - Leonardo DiCaprio is a patient", image: "https://m.media-amazon.com/images/M/MV5BYzhiNDkyNzktNTZmYS00ZTBkLTk2MDAtM2U0YjU1MzgxZjgzXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_FMjpg_UX1000_.jpg" },
+        { id: "twist_006", title: "Psycho - Norman Bates is his mother", image: "https://m.media-amazon.com/images/M/MV5BNTQwNDM1YzItNDAxZC00NWY2LTk0M2UtNDIwNWI5OGUyNWUxXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_FMjpg_UX1000_.jpg" },
+        { id: "twist_007", title: "The Others - Nicole Kidman is dead", image: "https://m.media-amazon.com/images/M/MV5BMTAxMDE4Mzc3ODNeQTJeQWpwZ15BbWU4MDY2Mjg4MDcx._V1_FMjpg_UX1000_.jpg" },
+        { id: "twist_008", title: "Saw - The corpse is alive", image: "https://m.media-amazon.com/images/M/MV5BMjE4MDYzNDE1OV5BMl5BanBnXkFtZTcwNDY2OTYwNA@@._V1_FMjpg_UX1000_.jpg" },
+        { id: "twist_009", title: "The Prestige - Christian Bale is twins", image: "https://m.media-amazon.com/images/M/MV5BMjA4NDI0MTIxNF5BMl5BanBnXkFtZTYwNTM0MzY2._V1_FMjpg_UX1000_.jpg" },
+        { id: "twist_010", title: "Get Out - The sunken place", image: "https://m.media-amazon.com/images/M/MV5BMjUxMDQwNjcyNl5BMl5BanBnXkFtZTgwNzcwMzc0MTI@._V1_FMjpg_UX1000_.jpg" }
+      ]
+    },
+    worst_movie_ever: {
+      title: "Worst Movie Ever Made",
+      description: "Vote on cinema's biggest disasters",
+      items: [
+        { id: "worst_001", title: "The Room (2003)", image: "https://m.media-amazon.com/images/M/MV5BYjEzN2FlYmYtNDkxOS00ZGY5LWJiYWMtZWRiOTBhZjIzNGJmXkEyXkFqcGdeQXVyMjMwMDI2Mg@@._V1_FMjpg_UX1000_.jpg" },
+        { id: "worst_002", title: "Cats (2019)", image: "https://m.media-amazon.com/images/M/MV5BNjhkNDg5NDQtMDdhNS00YmM2LWE5ZjQtZTFhODNjMzJhNTU2XkEyXkFqcGdeQXVyMjM4NTM5NDY@._V1_FMjpg_UX1000_.jpg" },
+        { id: "worst_003", title: "Batman & Robin (1997)", image: "https://m.media-amazon.com/images/M/MV5BMGQ5YTM1NmMtYmIxYy00N2VmLWJhZTYtN2EwYTY3MWFhOTczXkEyXkFqcGdeQXVyNTA2NTI0MTY@._V1_FMjpg_UX1000_.jpg" },
+        { id: "worst_004", title: "Gigli (2003)", image: "https://m.media-amazon.com/images/M/MV5BMTQwNzYyNTA4MV5BMl5BanBnXkFtZTYwNjAyNjg3._V1_FMjpg_UX1000_.jpg" },
+        { id: "worst_005", title: "Battlefield Earth (2000)", image: "https://m.media-amazon.com/images/M/MV5BMTQwMzQ0NDE2NV5BMl5BanBnXkFtZTYwNjk0MDg2._V1_FMjpg_UX1000_.jpg" },
+        { id: "worst_006", title: "Movie 43 (2013)", image: "https://m.media-amazon.com/images/M/MV5BMTg2MzI5NDQxNl5BMl5BanBnXkFtZTcwMzQ0OTk2OQ@@._V1_FMjpg_UX1000_.jpg" },
+        { id: "worst_007", title: "The Emoji Movie (2017)", image: "https://m.media-amazon.com/images/M/MV5BMTMxNDM2ODU2M15BMl5BanBnXkFtZTgwNzY3NDc1MjI@._V1_FMjpg_UX1000_.jpg" },
+        { id: "worst_008", title: "Fantastic Four (2015)", image: "https://m.media-amazon.com/images/M/MV5BMjM3NDY5NDgzM15BMl5BanBnXkFtZTgwNTgzOTY1NTE@._V1_FMjpg_UX1000_.jpg" },
+        { id: "worst_009", title: "Jack and Jill (2011)", image: "https://m.media-amazon.com/images/M/MV5BMTg5MDQ1NzE2NV5BMl5BanBnXkFtZTcwNDA1OTUzNg@@._V1_FMjpg_UX1000_.jpg" },
+        { id: "worst_010", title: "Howard the Duck (1986)", image: "https://m.media-amazon.com/images/M/MV5BMTg3OTg4NjkzNV5BMl5BanBnXkFtZTgwNDIzODkxMDE@._V1_FMjpg_UX1000_.jpg" }
+      ]
+    },
+    best_tv_finale: {
+      title: "Best TV Series Finale",
+      description: "Which show ended perfectly vs terribly?",
+      items: [
+        { id: "finale_001", title: "Breaking Bad - 'Felina'", image: "https://m.media-amazon.com/images/M/MV5BODFhZjAwNjgtZDFmYy00ZTVhLWIxYzYtYzNhZGZjMzNlZjE4XkEyXkFqcGdeQXVyMTMzNDExODE5._V1_FMjpg_UX1000_.jpg" },
+        { id: "finale_002", title: "The Sopranos - Cut to black", image: "https://m.media-amazon.com/images/M/MV5BZGJjYzhjYTYtMDBjYy00OWU1LTg5OTYtNmYwOTZmZjE3ZDdhXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_FMjpg_UX1000_.jpg" },
+        { id: "finale_003", title: "Game of Thrones - 'The Iron Throne'", image: "https://m.media-amazon.com/images/M/MV5BYTRiNDQwYzAtMzVlZS00NTI5LWJjYjUtMzkwNTUzMWMxZTllXkEyXkFqcGdeQXVyNDIzMzcwNjc@._V1_FMjpg_UX1000_.jpg" },
+        { id: "finale_004", title: "Lost - 'The End'", image: "https://m.media-amazon.com/images/M/MV5BNzhlY2E5NDUtYjJjYy00OWJlLTlmMmQtZGQ0MGNkNzQ3YWJhXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_FMjpg_UX1000_.jpg" },
+        { id: "finale_005", title: "Friends - 'The Last One'", image: "https://m.media-amazon.com/images/M/MV5BNDVkYjU0MzctMWRmZi00NTkxLTgwZWEtOWVhYjZlYjllYmU4XkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_FMjpg_UX1000_.jpg" },
+        { id: "finale_006", title: "How I Met Your Mother - 'Last Forever'", image: "https://m.media-amazon.com/images/M/MV5BNjg1MDQ5MjQ2N15BMl5BanBnXkFtZTYwNjI5NjA3._V1_FMjpg_UX1000_.jpg" },
+        { id: "finale_007", title: "The Office - 'Finale'", image: "https://m.media-amazon.com/images/M/MV5BMTgxOTE3MTI2N15BMl5BanBnXkFtZTcwMDUzMTgxOA@@._V1_FMjpg_UX1000_.jpg" },
+        { id: "finale_008", title: "Dexter - 'Remember the Monsters?'", image: "https://m.media-amazon.com/images/M/MV5BZjkzMmU5MjMtODllZS00OTA5LTk2ZTEtNmM1ZjU3MjgxNjVmXkEyXkFqcGdeQXVyNzA5NjUyNjM@._V1_FMjpg_UX1000_.jpg" },
+        { id: "finale_009", title: "Six Feet Under - 'Everyone's Waiting'", image: "https://m.media-amazon.com/images/M/MV5BMTY4NDcxMzk5M15BMl5BanBnXkFtZTcwNjk2NDYzMw@@._V1_FMjpg_UX1000_.jpg" },
+        { id: "finale_010", title: "The Wire - '-30-'", image: "https://m.media-amazon.com/images/M/MV5BZmY5ZDMxODEtNWIwOS00NjdkLWFjNzAtNzRlMmQzZjU5N2RiXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_FMjpg_UX1000_.jpg" }
+      ]
+    },
+    superhero_showdown: {
+      title: "Superhero Movie Showdown",
+      description: "Marvel vs DC vs everything else",
+      items: [
+        { id: "super_001", title: "Avengers: Endgame (Marvel)", image: "https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_FMjpg_UX1000_.jpg" },
+        { id: "super_002", title: "The Dark Knight (DC)", image: "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_FMjpg_UX1000_.jpg" },
+        { id: "super_003", title: "Spider-Man: Into the Spider-Verse (Sony)", image: "https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_FMjpg_UX1000_.jpg" },
+        { id: "super_004", title: "Wonder Woman (DC)", image: "https://m.media-amazon.com/images/M/MV5BMTYzODQzYjQtNTczNC00MzZhLTg1ZWYtZDUxYmQ3ZTY4NzA1XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_FMjpg_UX1000_.jpg" },
+        { id: "super_005", title: "Iron Man (Marvel)", image: "https://m.media-amazon.com/images/M/MV5BMTczNTI2ODUwOF5BMl5BanBnXkFtZTcwMTU0NTIzMw@@._V1_FMjpg_UX1000_.jpg" },
+        { id: "super_006", title: "The Incredibles (Pixar)", image: "https://m.media-amazon.com/images/M/MV5BMTY5OTU0OTc2NV5BMl5BanBnXkFtZTcwMzU4MDcyMQ@@._V1_FMjpg_UX1000_.jpg" },
+        { id: "super_007", title: "Black Panther (Marvel)", image: "https://m.media-amazon.com/images/M/MV5BMTg1MTY2MjYzNV5BMl5BanBnXkFtZTgwMTc4NTMwNDI@._V1_FMjpg_UX1000_.jpg" },
+        { id: "super_008", title: "Superman (1978)", image: "https://m.media-amazon.com/images/M/MV5BMzA0YWMwMTUtMTVhNC00NjRkLWE2ZTgtOWEzNjJhYzNiMTlkXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_FMjpg_UX1000_.jpg" },
+        { id: "super_009", title: "Deadpool (Fox)", image: "https://m.media-amazon.com/images/M/MV5BYzE5MjY1ZDgtMTkyNC00MTMyLThhMjAtZGI5OTE1NzFlZGJjXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_FMjpg_UX1000_.jpg" },
+        { id: "super_010", title: "Watchmen (DC/Warner Bros)", image: "https://m.media-amazon.com/images/M/MV5BY2IzZGY2YmEtYzljNS00NTM5LTgwMzUtOTQwZTQyOWI0OTNjXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_FMjpg_UX1000_.jpg" },
+        { id: "super_011", title: "Logan (Fox)", image: "https://m.media-amazon.com/images/M/MV5BYzc5MTU5MjktNDNhYi00NjdiLWE4N2UtZTg5ODU5MTc4N2RmXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_FMjpg_UX1000_.jpg" },
+        { id: "super_012", title: "The Boys (Amazon - TV but close enough)", image: "https://m.media-amazon.com/images/M/MV5BOTEyNDJhMDAtY2U5ZS00OTMzLTkwODktMjU3MjFkZWVlMGYyXkEyXkFqcGdeQXVyMjkwOTAyMDU@._V1_FMjpg_UX1000_.jpg" }
+      ]
+    }
+  }
+}
+// --- End Seed Data ---
+
+// --- Voting State ---
+const votes = {};
+for (const catKey in seedData.categories) {
+  votes[catKey] = {};
+  for (const item of seedData.categories[catKey].items) {
+    votes[catKey][item.id] = 0;
+  }
+}
+
+// --- App State ---
+let currentCategory = null;
+let showResults = false;
+
+function render() {
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+  const title = document.createElement('h1');
+  title.className = 'title';
+  title.textContent = 'Pop Culture Voting App';
+  app.appendChild(title);
+
+  if (!currentCategory) {
+    // Show categories
+    const catDiv = document.createElement('div');
+    catDiv.className = 'categories';
+    const h2 = document.createElement('h2');
+    h2.textContent = 'Categories';
+    catDiv.appendChild(h2);
+    const ul = document.createElement('ul');
+    for (const [catKey, cat] of Object.entries(seedData.categories)) {
+      const li = document.createElement('li');
+      li.className = 'category-card';
+      li.onclick = () => { currentCategory = catKey; showResults = false; render(); };
+      const catTitle = document.createElement('div');
+      catTitle.className = 'cat-title';
+      catTitle.textContent = cat.title;
+      const catDesc = document.createElement('div');
+      catDesc.className = 'cat-desc';
+      catDesc.textContent = cat.description;
+      li.appendChild(catTitle);
+      li.appendChild(catDesc);
+      ul.appendChild(li);
+    }
+    catDiv.appendChild(ul);
+    app.appendChild(catDiv);
+  } else {
+    // Show category items or results
+    const cat = seedData.categories[currentCategory];
+    const backBtn = document.createElement('button');
+    backBtn.className = 'back-btn';
+    backBtn.textContent = '← Back';
+    backBtn.onclick = () => { currentCategory = null; render(); };
+    app.appendChild(backBtn);
+    const h2 = document.createElement('h2');
+    h2.textContent = cat.title;
+    app.appendChild(h2);
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'toggle-btn';
+    toggleBtn.textContent = showResults ? 'Show Voting' : 'Show Results';
+    toggleBtn.onclick = () => { showResults = !showResults; render(); };
+    app.appendChild(toggleBtn);
+    if (showResults) {
+      const resultsDiv = document.createElement('div');
+      resultsDiv.className = 'results-list';
+      for (const item of cat.items) {
+        const card = document.createElement('div');
+        card.className = 'item-card';
+        const img = document.createElement('img');
+        img.src = item.image;
+        img.alt = item.title;
+        const itemTitle = document.createElement('div');
+        itemTitle.className = 'item-title';
+        itemTitle.textContent = item.title;
+        const votesDiv = document.createElement('div');
+        votesDiv.className = 'votes';
+        votesDiv.textContent = 'Votes: ' + votes[currentCategory][item.id];
+        card.appendChild(img);
+        card.appendChild(itemTitle);
+        card.appendChild(votesDiv);
+        resultsDiv.appendChild(card);
+      }
+      app.appendChild(resultsDiv);
+    } else {
+      const itemsDiv = document.createElement('div');
+      itemsDiv.className = 'items-list';
+      for (const item of cat.items) {
+        const card = document.createElement('div');
+        card.className = 'item-card';
+        const img = document.createElement('img');
+        img.src = item.image;
+        img.alt = item.title;
+        const itemTitle = document.createElement('div');
+        itemTitle.className = 'item-title';
+        itemTitle.textContent = item.title;
+        const voteBtn = document.createElement('button');
+        voteBtn.className = 'vote-btn';
+        voteBtn.textContent = 'Vote';
+        voteBtn.onclick = () => {
+          votes[currentCategory][item.id]++;
+          showResults = true;
+          render();
+        };
+        card.appendChild(img);
+        card.appendChild(itemTitle);
+        card.appendChild(voteBtn);
+        itemsDiv.appendChild(card);
+      }
+      app.appendChild(itemsDiv);
+    }
+  }
+}
+
+render();
+  </script>
+</body>
+</html> 
